@@ -71,7 +71,7 @@ app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
 app.use(`/`, viewsRouter);
 
-socketServer.on(`connection`, async (socket) => {
+/* socketServer.on(`connection`, async (socket) => {
   console.log(`Se conecto el usuario con id: ${socket.id}`);
   socket.emit(`products`, await pm.getProducts());
   socket.emit("categories", await pm.getCategories());
@@ -93,6 +93,6 @@ socketServer.on(`connection`, async (socket) => {
     const messages = await mm.getMessages();
     socketServer.emit("nuevo_mensaje", messages);
   });
-});
+}); */
 
 app.use(errorHandler);
