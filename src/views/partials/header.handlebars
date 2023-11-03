@@ -1,0 +1,14 @@
+<header>
+  <div>
+    <h1>Bienvenido {{session.first_name}}       Rol: {{session.role}}</h1>
+  </div>
+  <nav id="logout">
+    {{#if session.isLogged}}
+    <ul>
+      <li><a href="/api/users/logout">Logout</a></li>
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/mycart">My Cart</a></li>
+    {{/if}}
+    </ul>
+  </nav>
+</header>

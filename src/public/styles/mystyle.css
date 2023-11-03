@@ -1,0 +1,165 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+  align-items: start;
+}
+
+.product {
+  width: 200px;
+  height: auto;
+  border: 4px solid #015799;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.product img {
+  max-width: auto;
+  max-height: 120px;
+  border-radius: 10%;
+}
+
+.product .price {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.product button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.product button:hover {
+  background-color: #0056b3;
+}
+
+#forms-container {
+  display: flex;
+  justify-content: center;
+}
+
+#add-product-form,
+#add-category-form,
+#delete-product-form {
+  width: 20%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the form headings */
+#forms-container h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* Style labels and input fields */
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="checkbox"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Style the submit buttons */
+#forms-container button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#forms-container button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.container {
+  position: relative;
+}
+
+#cartSelect {
+  position: absolute;
+  top: 10px;
+  right: 250px;
+  border: 3px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 3px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+#newCartButtom {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#cartButton {
+  position: absolute;
+  top: 10px;
+  right: 130px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+nav {
+  position: absolute; /* Position it relative to the nearest positioned ancestor */
+  top: 10px; /* Adjust the top distance as needed */
+  right: 10px; /* Adjust the right distance as needed */
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav li {
+  display: inline; /* Display list items horizontally */
+  margin-right: 10px; /* Add spacing between menu items */
+}
+
+nav a {
+  text-decoration: none;
+}

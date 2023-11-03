@@ -1,0 +1,11 @@
+ {{>header}}
+
+    <div class="container">
+        <p data-id="{{session.userCart}}" id="cart">Cart {{session.userCart}}</p>
+    
+        <div id="products" class="product-grid">
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/store.js"></script>
