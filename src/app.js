@@ -24,7 +24,6 @@ const cartDao = new Cart();
 const messageDao = new Message();
 
 const app = express();
-app.use(errorHandler);
 
 console.log(config);
 
@@ -88,3 +87,5 @@ socketServer.on(`connection`, async (socket) => {
     socketServer.emit("nuevo_mensaje", messages);
   });
 });
+
+app.use(errorHandler);
