@@ -1,14 +1,14 @@
 import passport from "passport";
 import local from "passport-local";
+import User from "../dao/users.dao.js";
 import bcrypt from "bcrypt";
 import GitHubStrategy from "passport-github2";
-import UserManager from "../controller/UserManager.js";
-import CartManager from "../controller/CartManager.js";
-
+import Cart from "../dao/carts.dao.js";
+import config from "../../config.js";
 const LocalStrategy = local.Strategy;
 
-const userManager = new UserManager();
-const cartManager = new CartManager();
+const userDao = new User();
+const cartDao = new Cart();
 
 const initializePassport = () => {
   passport.use(
@@ -17,7 +17,7 @@ const initializePassport = () => {
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
-        const userExists = await userManager.getUserByEmail(email);
+        const userExists = await userDao.getUserByEmail(email);
 
         if (userExists) {
           console.log("User already exists. Registration failed.");
@@ -28,16 +28,15 @@ const initializePassport = () => {
           password,
           bcrypt.genSaltSync(10)
         );
-        const carrito = await cartManager.createCart([]);
-        const user = await userManager.createUser(
+        const carrito = await cartDao.createCart({ products: [] });
+        const user = await userDao.createUser({
           first_name,
           last_name,
           email,
           age,
-          hashedPassword,
-          carrito._id
-        );
-
+          password: hashedPassword,
+          cart: carrito._id,
+        });
         console.log("User registered successfully.");
         return done(null, user);
       }
@@ -56,18 +55,17 @@ const initializePassport = () => {
         try {
           console.log(profile);
           const email = profile.emails[0].value;
-          const user = await userManager.getUserByEmail(email);
+          const user = await userDao.getUserByEmail(email);
 
           if (!user) {
-            const carrito = await cartManager.createCart([]);
-            const newUser = await userManager.createUser(
-              profile._json.name,
-              "",
+            const carrito = await cartDao.createCart({ products: [] });
+            const newUser = await userDao.createUser({
+              first_name: profile._json.name,
+              last_name: "",
               email,
-              18,
-              carrito._id
-            );
-
+              age: 18,
+              cart: carrito._id,
+            });
             return done(null, newUser);
           }
 
@@ -80,12 +78,32 @@ const initializePassport = () => {
   );
 
   passport.serializeUser((user, done) => {
-    done(null, user._id);
+    if (user.role === "Admin") {
+      done(null, "admin");
+    } else {
+      done(null, user._id);
+    }
   });
 
   passport.deserializeUser(async (id, done) => {
-    const user = await userManager.getUserById(id);
-    done(null, user);
+    if (id === "admin") {
+      const adminUser = {
+        first_name: "ADMIN",
+        last_name: "",
+        email: config.adminName,
+        age: 18,
+        cart: "undefined",
+        role: "Admin",
+      };
+      done(null, adminUser);
+    } else {
+      try {
+        const user = await userDao.getUserById(id);
+        done(null, user);
+      } catch (err) {
+        done(err);
+      }
+    }
   });
 
   passport.use(
@@ -94,12 +112,29 @@ const initializePassport = () => {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
-          const user = await userManager.getUserByEmail(email);
+          if (
+            username == config.adminName &&
+            password == config.adminPassword
+          ) {
+            const user = {
+              _id: config.adminCoder,
+              first_name: "ADMIN",
+              last_name: "",
+              email: config.adminName,
+              age: 18,
+              cart: "undefined",
+              role: "Admin",
+            };
+
+            return done(null, user);
+          }
+
+          const user = await userDao.getUserByEmail(username);
           if (!user) {
             console.log("User not found. Login failed.");
             return done(null, false);
           }
-          console.log(user.password);
+
           if (!bcrypt.compareSync(password, user.password)) {
             console.log("Password mismatch. Login failed.");
             return done(null, false);

@@ -15,16 +15,16 @@ import cartsRouter from "./routes/cartRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import userRouter from "./routes/userRouter.js";
 import sessionRouter from "./routes/sessionRouter.js";
+import Product from "./dao/products.dao.js";
+import Cart from "./dao/carts.dao.js";
+import Message from "./dao/messages.dao.js";
 
-import MessageManager from "./controller/MessageManager.js";
-import ProductManager from "./controller/ProductManager.js";
-import CartManager from "./controller/CartManager.js";
-
-const mm = new MessageManager();
-const pm = new ProductManager();
-const cm = new CartManager();
+const productDao = new Product();
+const cartDao = new Cart();
+const messageDao = new Message();
 
 const app = express();
+app.use(errorHandler);
 
 console.log(config);
 
@@ -71,28 +71,20 @@ app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
 app.use(`/`, viewsRouter);
 
-/* socketServer.on(`connection`, async (socket) => {
+socketServer.on(`connection`, async (socket) => {
   console.log(`Se conecto el usuario con id: ${socket.id}`);
-  socket.emit(`products`, await pm.getProducts());
-  socket.emit("categories", await pm.getCategories());
-  socket.emit(`nuevo_mensaje`, await mm.getMessages());
-  socket.emit("carts", await cm.getCarts());
+  socket.emit(`products`, await productDao.getProducts());
+  socket.emit("categories", await productDao.getCategories());
+  socket.emit(`nuevo_mensaje`, await messageDao.getMessages());
 
   socket.on("cartId", async (cartId) => {
-    const cart = await carritosModel
-      .findOne({ _id: cartId })
-      .lean()
-      .maxTimeMS(10000);
-    ``;
-    console.log(cart);
+    const cart = await cartDao.getCartById(cartId);
     socket.emit("cart", cart);
   });
 
   socket.on(`mensaje`, async (data) => {
-    mm.addMessage(data);
-    const messages = await mm.getMessages();
+    messageDao.createMessage(data);
+    const messages = await messageDao.getMessages();
     socketServer.emit("nuevo_mensaje", messages);
   });
-}); */
-
-app.use(errorHandler);
+});

@@ -1,10 +1,10 @@
 const socket = io();
 
 const productosContainer = document.getElementById("products");
-
-socket.on("products", (productos) => {
-  const productoslist = productos.map(
-    (prod) => `<div id="${prod._id}" class="product">
+if (productosContainer) {
+  socket.on("products", (productos) => {
+    const productoslist = productos.map(
+      (prod) => `<div id="${prod._id}" class="product">
       <h2>${prod.title}</h2>
       <p>Description: ${prod.description}</p>
       <p>Code: ${prod.code}</p>
@@ -13,11 +13,11 @@ socket.on("products", (productos) => {
       <img src="${prod.thumbnail}" alt="${prod.title} Image" />
       <p class="price">Price: $ ${prod.price}</p>
     </div>`
-  );
+    );
 
-  productosContainer.innerHTML = productoslist.join("");
-});
-
+    productosContainer.innerHTML = productoslist.join("");
+  });
+}
 socket.on("products_update", (productos) => {
   const productoslist = productos.map(
     (prod) => `<div id="${prod._id}" class="product">

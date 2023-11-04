@@ -1,10 +1,7 @@
 import { Router } from "express";
-import ProductManager from "../controller/ProductManager.js";
-import { cartsModel } from "../dao/mongo/carts.model.js";
 
-const pm = new ProductManager();
-const products = pm.getProducts();
 const viewsRouter = Router();
+
 viewsRouter.get(`/login`, (req, res) => {
   if (req.session.isLogged) {
     res.redirect("/products");
@@ -60,7 +57,6 @@ viewsRouter.get("/chat", (req, res) => res.render("chat", {}));
 
 viewsRouter.get("/mycart", (req, res) => {
   const cartId = req.session.userCart;
-  console.log(cartId);
   res.render("cart", { cartId });
 });
 
