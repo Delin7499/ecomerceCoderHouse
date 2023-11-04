@@ -25,14 +25,9 @@ export const addProductToCart = async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
   const cart = await cartDao.getCartById(cartId);
-  console.log(cart);
-  const oldProduct = cart.products.find(({ product }) => {
-    console.log("el id del priducto actual es " + product.toString());
-    return product.toString() === productId;
-  });
-  console.log("se busco el id " + productId);
-
-  console.log("el producto es " + oldProduct);
+  const oldProduct = cart.products.find(
+    ({ product }) => product._id == productId
+  );
   if (oldProduct) {
     oldProduct.quantity += 1;
   } else {
