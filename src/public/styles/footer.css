@@ -1,0 +1,24 @@
+/* Add your custom CSS for the footer */
+
+footer {
+  background-color: #007bff; /* Background color for the footer */
+  color: #fff; /* Text color */
+  padding: 10px; /* Adjust the padding as needed */
+  text-align: center; /* Center-align the text within the footer */
+}
+
+/* Style the text within the footer */
+footer p {
+  margin: 0; /* Remove any default margin on the paragraph */
+}
+
+/* Style the anchor links within the footer if needed */
+footer a {
+  color: #fff; /* Link text color */
+  text-decoration: none; /* Remove underline from links */
+}
+
+/* Style the links on hover */
+footer a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
