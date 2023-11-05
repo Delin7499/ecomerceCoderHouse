@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   cart: { type: mongoose.Schema.Types.ObjectId, ref: "carts" },
   role: { type: String, default: "user" },
+  isGithub: { type: Boolean, default: false },
 });
 
 const userModel = mongoose.model(userCollection, userSchema);
