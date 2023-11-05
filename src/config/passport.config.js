@@ -60,7 +60,7 @@ const initializePassport = () => {
           if (!user) {
             const carrito = await cartDao.createCart({ products: [] });
             const newUser = await userDao.createUser({
-              first_name: profile._json.name,
+              first_name: profile._json.login,
               last_name: "",
               email,
               age: 18,
