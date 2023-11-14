@@ -1,6 +1,27 @@
 <div class="container">
   <p data-id="{{session.userCart}}" id="cart">Cart {{session.userCart}}</p>
 
+  <div class="containerFilter">
+    <label for="limit">Limit:</label>
+    <select id="limit" name="limit">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+    </select>
+
+    <label for="page">Page:</label>
+    <input type="number" id="page" name="page" value="1" min="1" />
+
+    <label for="sort">Sort:</label>
+    <select id="sort" name="sort">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
+    </select>
+
+    <button id="applyFilters">Apply Filters</button>
+  </div>
+
   <div id="products" class="product-grid">
   </div>
 </div>

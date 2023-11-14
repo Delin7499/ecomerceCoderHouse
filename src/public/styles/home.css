@@ -13,7 +13,12 @@ body {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+.containerFilter {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; /* Use flexbox to arrange children horizontally */
+  flex-wrap: wrap; /* Allow wrapping to the next line if necessary */
+  justify-content: center; /* Center the content horizontally */
 }
 
 h1 {
@@ -113,4 +118,23 @@ header h1 {
   background-color: #0056b3;
 }
 
+div > label,
+div > select,
+div > input,
+div > button {
+  margin: 5px; /* Add some margin around each element */
+}
+
+/* Style for the Apply Filters button */
+#applyFilters {
+  background-color: #4caf50; /* Green background color */
+  color: white; /* White text color */
+  padding: 10px 15px; /* Add padding to make it look nice */
+  font-size: 16px; /* Increase font size */
+  cursor: pointer; /* Add a pointer cursor on hover */
+}
+
+#applyFilters:hover {
+  background-color: #45a049; /* Darker green color on hover */
+}
 /* Add more button classes and styles as needed */

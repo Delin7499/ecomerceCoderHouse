@@ -45,19 +45,23 @@ export const addProductToCart = async (req, res) => {
 export const removeProductFromCart = async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  const cart = await cartDao.getcartById(cartId);
+  const cart = await cartDao.getCartById(cartId);
   if (!cart) {
     res.status(404).send();
     return;
   }
-  const indexToDelete = cart.products.findIndex(
-    ({ product }) => (product = productId)
-  );
-
+  console.log("se busca producto " + productId);
+  console.log(cart);
+  const indexToDelete = cart.products.findIndex(({ product }) => {
+    console.log(product._id.toString());
+    return product._id.toString() === productId;
+  });
+  console.log("el indice encontrado es " + indexToDelete);
   if (indexToDelete !== -1) {
     cart.products.splice(indexToDelete, 1);
   }
-  const update = cartDao.updateOne(cartId, cart);
+  const update = await cartDao.updateOne(cartId, cart);
+  req.context.socketServer.emit(`cartUpdate`, cart);
   res.send(update);
 };
 
