@@ -71,4 +71,15 @@ export default class Product {
       console.log(error);
     }
   };
+
+  updateStock = async (productId, newStock) => {
+    try {
+      const product = await productsModel.findById(productId).lean();
+      product.stock = newStock;
+      const update = await productsModel.updateOne({ _id: productId }, product);
+      return update;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { adminAuthMiddleware } from "../middlewares/adminAuth.js";
 
 const viewsRouter = Router();
 
@@ -39,14 +40,15 @@ viewsRouter.get(`/products`, (req, res) => {
     return res.redirect("/login");
   }
   const session = req.session;
-  res.render("home", { session });
+  const isAdmin = req.session.role === "Admin";
+  res.render("home", { session, isAdmin });
 });
 viewsRouter.get("/carts/:cid", (req, res) => {
   const cartId = req.params.cid;
   res.render("cart", { cartId });
 });
 
-viewsRouter.get(`/realtimeproducts`, (req, res) =>
+viewsRouter.get(`/realtimeproducts`, adminAuthMiddleware, (req, res) =>
   res.render("realTimeProducts", {})
 );
 viewsRouter.get(`/realtimecarts`, (req, res) =>

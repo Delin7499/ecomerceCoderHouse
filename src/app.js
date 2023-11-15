@@ -18,6 +18,7 @@ import sessionRouter from "./routes/sessionRouter.js";
 import Product from "./dao/products.dao.js";
 import Cart from "./dao/carts.dao.js";
 import Message from "./dao/messages.dao.js";
+import ticketRouter from "./routes/ticketRouter.js";
 
 const productDao = new Product();
 const cartDao = new Cart();
@@ -33,7 +34,7 @@ app.use(
   session({
     store: MongoStore.create({
       mongoUrl: config.mongoUrl,
-      ttl: 1000000,
+      ttl: 100000,
     }),
     secret: "coderSectret",
     resave: false,
@@ -63,11 +64,12 @@ app.set("views", `./src/views`);
 app.set("view engine", "handlebars");
 
 app.use(express.static(`./src/public`));
-
+app.use("/api/ticket", ticketRouter);
 app.use(`/api/products`, productRouter);
 app.use(`/api/carts`, cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
+
 app.use(`/`, viewsRouter);
 
 socketServer.on(`connection`, async (socket) => {

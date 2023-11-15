@@ -42,7 +42,30 @@ export default class Cart {
     }
   };
   updateOne = async (cartId, cart) => {
-    const update = cartsModel.updateOne({ _id: cartId }, cart);
-    return update;
+    try {
+      const update = cartsModel.updateOne({ _id: cartId }, cart);
+      return update;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateCart = async (cartId, updatedFields) => {
+    try {
+      const updatedCart = await cartsModel
+        .findByIdAndUpdate(cartId, updatedFields, {
+          new: true,
+          useFindAndModify: false,
+        })
+        .populate("products.product");
+
+      if (!updatedCart) {
+        throw new Error("Cart not found");
+      }
+
+      return updatedCart;
+    } catch (error) {
+      throw error;
+    }
   };
 }

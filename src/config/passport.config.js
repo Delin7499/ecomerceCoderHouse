@@ -53,7 +53,6 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          console.log(profile);
           const email = profile.emails[0].value;
           const user = await userDao.getUserByEmail(email);
 

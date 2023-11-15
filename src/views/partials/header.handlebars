@@ -5,6 +5,9 @@
   <nav id="logout">
     {{#if session.isLogged}}
     <ul>
+      {{#if isAdmin}}
+        <li><a href="/realtimeproducts">Edit Products</a></li>
+      {{/if}}
       <li><a href="/api/users/logout">Logout</a></li>
       <li><a href="/profile">Profile</a></li>
       <li><a href="/mycart">My Cart</a></li>
