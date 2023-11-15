@@ -27,6 +27,12 @@ export const purchase = async (req, res) => {
       purchaser: req.session.email,
     });
     req.context.socketServer.emit(`cartUpdate`, updatedCart);
+    res
+      .status(200)
+      .json({
+        message: "Purchase complete",
+        remainingproducts: updatedCart.products,
+      });
   } catch (error) {
     console.error("Error processing purchase:", error);
     res.status(500).send("Internal Server Error");
