@@ -29,7 +29,11 @@ const app = express();
 
 console.log(config);
 
-mongoose.connect(config.mongoUrl);
+mongoose
+  .connect(config.mongoUrl)
+  .catch((error) =>
+    console.log("Error conectando a mongo, verifique permiso desde su ip")
+  );
 
 app.use(
   session({

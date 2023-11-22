@@ -18,7 +18,7 @@ export const getProducts = async (req, res) => {
         status: true,
         stock: 100,
         category: faker.commerce.productAdjective(),
-        thumnail: "",
+        thumnail: faker.image.url(),
       });
     }
     return res.send(mockingProducts);

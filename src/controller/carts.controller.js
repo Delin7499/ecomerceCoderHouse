@@ -1,4 +1,5 @@
 import Cart from "../dao/carts.dao.js";
+import { createErrorResponse } from "../utils.js";
 
 const cartDao = new Cart();
 
@@ -8,38 +9,53 @@ export const getCarts = async (req, res) => {
 };
 
 export const createCart = async (req, res) => {
-  const cart = await cartDao.createCart({ products: [] });
-  req.context.socketServer.emit(`carts`, await cartDao.getcarts());
+  try {
+    const cart = await cartDao.createCart({ products: [] });
+    req.context.socketServer.emit(`carts`, await cartDao.getcarts());
+  } catch (error) {
+    const errorCode = error.code || "CART_CREATE_ERROR";
+    createErrorResponse(res, errorCode);
+  }
 };
 
 export const getCart = async (req, res) => {
-  const cart = await cartDao.getCartById(req.params.cid);
-  if (cart) {
-    res.status(200).send(cart.products);
-  } else {
-    res.status(404).send("Not found");
+  try {
+    const cart = await cartDao.getCartById(req.params.cid);
+    if (cart) {
+      res.status(200).send(cart.products);
+    } else {
+      res.status(404).send("Not found");
+    }
+  } catch (error) {
+    const errorCode = error.code || "CART_NOT_FOUND";
+    createErrorResponse(res, errorCode);
   }
 };
 
 export const addProductToCart = async (req, res) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
-  const cart = await cartDao.getCartById(cartId);
-  const oldProduct = cart.products.find(
-    ({ product }) => product._id == productId
-  );
-  if (oldProduct) {
-    oldProduct.quantity += 1;
-  } else {
-    cart.products.push({
-      product: productId,
-      quantity: 1,
-    });
-  }
+  try {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    const cart = await cartDao.getCartById(cartId);
+    const oldProduct = cart.products.find(
+      ({ product }) => product._id == productId
+    );
+    if (oldProduct) {
+      oldProduct.quantity += 1;
+    } else {
+      cart.products.push({
+        product: productId,
+        quantity: 1,
+      });
+    }
 
-  const update = await cartDao.updateOne(cartId, cart);
-  req.context.socketServer.emit(`carts`, await cartDao.getCarts());
-  res.send(update);
+    const update = await cartDao.updateOne(cartId, cart);
+    req.context.socketServer.emit(`carts`, await cartDao.getCarts());
+    res.send(update);
+  } catch (error) {
+    const errorCode = error.code || "CART_ADD_ERROR";
+    createErrorResponse(res, errorCode);
+  }
 };
 
 export const removeProductFromCart = async (req, res) => {
