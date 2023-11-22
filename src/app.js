@@ -19,6 +19,7 @@ import Product from "./dao/products.dao.js";
 import Cart from "./dao/carts.dao.js";
 import Message from "./dao/messages.dao.js";
 import ticketRouter from "./routes/ticketRouter.js";
+import { getProducts } from "./controller/mocking.controller.js";
 
 const productDao = new Product();
 const cartDao = new Cart();
@@ -69,7 +70,7 @@ app.use(`/api/products`, productRouter);
 app.use(`/api/carts`, cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
-
+app.get("/mockingproducts", getProducts);
 app.use(`/`, viewsRouter);
 
 socketServer.on(`connection`, async (socket) => {
