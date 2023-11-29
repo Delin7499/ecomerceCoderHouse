@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger.js";
 import { cartsModel } from "./mongo/carts.model.js";
 
 export default class Cart {
@@ -6,7 +7,7 @@ export default class Cart {
       let carts = await cartsModel.find().populate("products.product").lean();
       return carts;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -19,7 +20,7 @@ export default class Cart {
         .lean();
       return cart;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -37,7 +38,7 @@ export default class Cart {
       let cart = await cartsModel.create(cartData);
       return cart;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -46,7 +47,7 @@ export default class Cart {
       const update = cartsModel.updateOne({ _id: cartId }, cart);
       return update;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 

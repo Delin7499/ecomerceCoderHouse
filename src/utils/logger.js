@@ -15,4 +15,4 @@ const productionLogger = winston.createLogger({
 });
 const enviroment = process.argv[2];
 export const logger =
-  enviroment === "production" ? productionLogger : developmentLogger;
+  enviroment === "development" ? developmentLogger : productionLogger;

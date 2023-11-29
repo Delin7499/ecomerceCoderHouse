@@ -7,7 +7,7 @@ export default class Product {
       let products = await productsModel.find().lean();
       return products;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -22,7 +22,7 @@ export default class Product {
       let product = await productsModel.findOne({ _id: productId }).lean();
       return product;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -32,7 +32,7 @@ export default class Product {
       let product = await productsModel.findOne(productData).lean();
       return product;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -42,7 +42,7 @@ export default class Product {
       let product = await productsModel.create(productData);
       return product;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -51,7 +51,7 @@ export default class Product {
     try {
       await productsModel.deleteOne({ _id: productId });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -60,7 +60,7 @@ export default class Product {
       const categories = await categoriesModel.find().lean();
       return categories;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -68,7 +68,7 @@ export default class Product {
     try {
       await categoriesModel.create({ name });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -79,7 +79,7 @@ export default class Product {
       const update = await productsModel.updateOne({ _id: productId }, product);
       return update;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 }

@@ -33,7 +33,6 @@ export const login = async (req, res) => {
 };
 
 export const githubcallback = async (req, res) => {
-  console.log(req.user);
   req.session.first_name = req.user.first_name;
   req.session.last_name = req.user.last_name;
   req.session.email = req.user.email;

@@ -18,7 +18,6 @@ export const purchase = async (req, res) => {
 
     const updatedCart = await processPurchase(cart);
     const totalAmount = updatedCart.products.reduce((total, product) => {
-      console.log(product);
       return total + product.quantity * product.product.price;
     }, 0);
 

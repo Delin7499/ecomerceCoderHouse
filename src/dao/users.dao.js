@@ -6,7 +6,7 @@ export default class User {
       let users = await userModel.find().populate("cart").lean();
       return users;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -20,7 +20,7 @@ export default class User {
 
       return user;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -32,7 +32,7 @@ export default class User {
         .lean();
       return user;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -43,7 +43,7 @@ export default class User {
 
       return user;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -53,7 +53,7 @@ export default class User {
       let user = await userModel.create(userData);
       return user;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -63,7 +63,7 @@ export default class User {
       let update = await userModel.updateOne({ _id: id }, user);
       return update;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };

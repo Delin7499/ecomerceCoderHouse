@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import GitHubStrategy from "passport-github2";
 import Cart from "../dao/carts.dao.js";
 import config from "../../config.js";
+import { logger } from "../utils/logger.js";
 const LocalStrategy = local.Strategy;
 
 const userDao = new User();
@@ -20,7 +21,7 @@ const initializePassport = () => {
         const userExists = await userDao.getUserByEmail(email);
 
         if (userExists) {
-          console.log("User already exists. Registration failed.");
+          logger.error("User already exists. Registration failed.");
           return done(null, false);
         }
 
@@ -37,7 +38,7 @@ const initializePassport = () => {
           password: hashedPassword,
           cart: carrito._id,
         });
-        console.log("User registered successfully.");
+        logger.info("User registered successfully.");
         return done(null, user);
       }
     )
@@ -130,16 +131,16 @@ const initializePassport = () => {
 
           const user = await userDao.getUserByEmail(username);
           if (!user) {
-            console.log("User not found. Login failed.");
+            logger.error("User not found. Login failed.");
             return done(null, false);
           }
 
           if (!bcrypt.compareSync(password, user.password)) {
-            console.log("Password mismatch. Login failed.");
+            logger.error("Password mismatch. Login failed.");
             return done(null, false);
           }
 
-          console.log("User logged in successfully.");
+          logger.info("User logged in successfully.");
           return done(null, user);
         } catch (error) {
           console.error("Error during login:", error);

@@ -6,7 +6,7 @@ export default class Message {
       let messages = await messagesModel.find().lean();
       return messages;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -16,7 +16,7 @@ export default class Message {
       let message = await messagesModel.findOne({ _id: messageId }).lean();
       return message;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -26,7 +26,7 @@ export default class Message {
       let message = await messagesModel.findOne(messageData).lean();
       return message;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -36,7 +36,7 @@ export default class Message {
       let message = await messagesModel.create(messageData);
       return message;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import config from "../../config.js";
+import { logger } from "./logger.js";
 
 const MONGODB_URI = config.mongoUrl;
 
@@ -9,9 +10,9 @@ export const connectToMongoDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Connected to MongoDB");
+    logger.info("Connected to MongoDB");
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error.message);
+    logger.error("Error connecting to MongoDB:", error.message);
     process.exit(1);
   }
 };

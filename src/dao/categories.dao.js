@@ -6,7 +6,7 @@ export default class Categorie {
       let categories = await categoriesModel.find().lean();
       return categories;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -18,7 +18,7 @@ export default class Categorie {
         .lean();
       return categorie;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -28,7 +28,7 @@ export default class Categorie {
       let categorie = await categoriesModel.findOne(categorieData).lean();
       return categorie;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -38,7 +38,7 @@ export default class Categorie {
       let categorie = await categoriesModel.create(categorieData);
       return categorie;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };

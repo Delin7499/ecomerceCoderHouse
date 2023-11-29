@@ -66,13 +66,9 @@ export const removeProductFromCart = async (req, res) => {
     res.status(404).send();
     return;
   }
-  console.log("se busca producto " + productId);
-  console.log(cart);
   const indexToDelete = cart.products.findIndex(({ product }) => {
-    console.log(product._id.toString());
     return product._id.toString() === productId;
   });
-  console.log("el indice encontrado es " + indexToDelete);
   if (indexToDelete !== -1) {
     cart.products.splice(indexToDelete, 1);
   }

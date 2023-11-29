@@ -22,16 +22,18 @@ import ticketRouter from "./routes/ticketRouter.js";
 import { getProducts } from "./controller/mocking.controller.js";
 import { addLogger } from "./middlewares/logger.js";
 import { connectToMongoDB } from "./utils/mongoconnect.js";
+import { logger } from "./utils/logger.js";
 
 const productDao = new Product();
 const cartDao = new Cart();
 const messageDao = new Message();
 
 const app = express();
-
+logger.info("pruebaaaaaaaaaaa");
+logger.error("errrorrrr");
 app.use(addLogger);
 
-console.log(config);
+logger.info(config);
 connectToMongoDB();
 
 app.use(
@@ -77,7 +79,7 @@ app.get("/mockingproducts", getProducts);
 app.use(`/`, viewsRouter);
 
 socketServer.on(`connection`, async (socket) => {
-  console.log(`Se conecto el usuario con id: ${socket.id}`);
+  logger.info(`Se conecto el usuario con id: ${socket.id}`);
   socket.emit(`products`, await productDao.getProducts());
   socket.emit("categories", await productDao.getCategories());
   socket.emit(`nuevo_mensaje`, await messageDao.getMessages());
