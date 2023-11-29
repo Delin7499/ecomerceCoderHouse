@@ -36,7 +36,6 @@ function renderCartProducts(products) {
       <h4>Cantidad ${prod.quantity}</h4>
       <img src="${prod.product.thumbnail}" alt="${prod.product.title} Image" />
       <p class="price">Price: $ ${prod.product.price}</p>
-      <p class="price">Price: $ ${prod.product._id}</p>
       <button class="delete-product-button" data-product-id="${prod.product._id}">Delete</button>
     </div>`;
   });

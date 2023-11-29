@@ -8,7 +8,6 @@ const productDao = new Product();
 
 export const purchase = async (req, res) => {
   const cartId = req.params.cartId;
-  console.log(req.session);
 
   try {
     const cart = await cartDao.getCartById(cartId);
@@ -19,6 +18,7 @@ export const purchase = async (req, res) => {
 
     const updatedCart = await processPurchase(cart);
     const totalAmount = updatedCart.products.reduce((total, product) => {
+      console.log(product);
       return total + product.quantity * product.product.price;
     }, 0);
 
@@ -27,12 +27,10 @@ export const purchase = async (req, res) => {
       purchaser: req.session.email,
     });
     req.context.socketServer.emit(`cartUpdate`, updatedCart);
-    res
-      .status(200)
-      .json({
-        message: "Purchase complete",
-        remainingproducts: updatedCart.products,
-      });
+    res.status(200).json({
+      message: "Purchase complete",
+      purchasedProducts: updatedCart.products,
+    });
   } catch (error) {
     console.error("Error processing purchase:", error);
     res.status(500).send("Internal Server Error");
@@ -56,13 +54,27 @@ const processPurchase = async (cart) => {
     })
   );
 
-  const purchasedProducts = updatedProducts.filter(
+  const notPurchasedProducts = updatedProducts.filter(
     (cartProduct) => !cartProduct.purchased
   );
 
   const updatedCart = await cartDao.updateCart(cart._id, {
-    products: purchasedProducts,
+    products: notPurchasedProducts,
   });
 
+  const purchasedProducts = updatedProducts.filter(
+    (cartProduct) => cartProduct.purchased
+  );
+
+  updatedCart.products = purchasedProducts;
+
   return updatedCart;
+};
+
+export const getUserTickets = async (req, res) => {
+  const userEmail = req.params.email;
+
+  const tickets = await ticketDao.getUserTickets(userEmail);
+
+  return res.status(200).send(tickets);
 };

@@ -1,17 +1,20 @@
 <header>
-  <div>
-    <h1>Bienvenido {{session.first_name}}       Rol: {{session.role}}</h1>
-  </div>
-  <nav id="logout">
-    {{#if session.isLogged}}
-    <ul>
-      {{#if isAdmin}}
-        <li><a href="/realtimeproducts">Edit Products</a></li>
-      {{/if}}
-      <li><a href="/api/users/logout">Logout</a></li>
-      <li><a href="/profile">Profile</a></li>
-      <li><a href="/mycart">My Cart</a></li>
-    {{/if}}
-    </ul>
-  </nav>
+  {{#if session.isLogged}}
+    <div>
+      <h1>Bienvenido {{session.first_name}} Rol: {{session.role}}</h1>
+    </div>
+    <nav id="logout">
+
+      <ul>
+        {{#if isAdmin}}
+          <li><a href="/realtimeproducts">Edit Products</a></li>
+        {{/if}}
+        <li><a href="/api/users/logout">Logout</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/mytickets">My Tickets</a></li>
+        <li><a href="/mycart">My Cart</a></li>
+
+      </ul>
+    </nav>
+  {{/if}}
 </header>

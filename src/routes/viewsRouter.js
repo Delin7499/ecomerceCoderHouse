@@ -62,4 +62,9 @@ viewsRouter.get("/mycart", (req, res) => {
   res.render("cart", { cartId });
 });
 
+viewsRouter.get("/mytickets", (req, res) => {
+  const userEmail = req.session.email;
+  res.render("userTickets", { userEmail });
+});
+
 export default viewsRouter;

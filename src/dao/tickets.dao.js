@@ -11,6 +11,17 @@ export default class Ticket {
     }
   };
 
+  getUserTickets = async (email) => {
+    try {
+      let tickets = await ticketModel.find({ purchaser: email }).lean();
+
+      return tickets;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
+
   getTicketById = async (ticketId) => {
     try {
       let ticket = await ticketModel.findOne({ _id: ticketId }).lean();

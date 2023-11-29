@@ -20,6 +20,8 @@ import Cart from "./dao/carts.dao.js";
 import Message from "./dao/messages.dao.js";
 import ticketRouter from "./routes/ticketRouter.js";
 import { getProducts } from "./controller/mocking.controller.js";
+import { addLogger } from "./middlewares/logger.js";
+import { connectToMongoDB } from "./utils/mongoconnect.js";
 
 const productDao = new Product();
 const cartDao = new Cart();
@@ -27,13 +29,10 @@ const messageDao = new Message();
 
 const app = express();
 
-console.log(config);
+app.use(addLogger);
 
-mongoose
-  .connect(config.mongoUrl)
-  .catch((error) =>
-    console.log("Error conectando a mongo, verifique permiso desde su ip")
-  );
+console.log(config);
+connectToMongoDB();
 
 app.use(
   session({
