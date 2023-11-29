@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { adminAuthMiddleware } from "../middlewares/adminAuth.js";
+import { adminAuthMiddleware } from "../middlewares/adminauth.js";
 
 const viewsRouter = Router();
 
