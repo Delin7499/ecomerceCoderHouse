@@ -13,6 +13,7 @@ viewsRouter.get(`/login`, (req, res) => {
 viewsRouter.get(`/signup`, (req, res) => {
   if (req.session.isLogged) {
     res.redirect("/products");
+    res.redirect("/products");
   } else {
     res.render("signup", {});
   }

@@ -1,4 +1,5 @@
 import { userModel } from "./mongo/user.model.js";
+import { logger } from "../utils/logger.js";
 
 export default class User {
   getUsers = async () => {

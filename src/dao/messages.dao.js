@@ -1,4 +1,5 @@
 import { messagesModel } from "./mongo/messages.model.js";
+import { logger } from "../utils/logger.js";
 
 export default class Message {
   getMessages = async () => {

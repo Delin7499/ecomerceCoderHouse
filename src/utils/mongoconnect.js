@@ -6,10 +6,7 @@ const MONGODB_URI = config.mongoUrl;
 
 export const connectToMongoDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGODB_URI);
     logger.info("Connected to MongoDB");
   } catch (error) {
     logger.error("Error connecting to MongoDB:", error.message);

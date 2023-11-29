@@ -1,12 +1,12 @@
 import { ticketModel } from "./mongo/ticket.model.js";
-
+import { logger } from "../utils/logger.js";
 export default class Ticket {
   getTickets = async () => {
     try {
       let tickets = await ticketModel.find().lean();
       return tickets;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -17,7 +17,7 @@ export default class Ticket {
 
       return tickets;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -27,7 +27,7 @@ export default class Ticket {
       let ticket = await ticketModel.findOne({ _id: ticketId }).lean();
       return ticket;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -40,7 +40,7 @@ export default class Ticket {
         .lean();
       return ticket;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -50,7 +50,7 @@ export default class Ticket {
       let ticket = await ticketModel.create(ticketData);
       return ticket;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };
@@ -60,7 +60,7 @@ export default class Ticket {
       let update = await ticketModel.updateOne({ _id: id }, ticket);
       return update;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return null;
     }
   };

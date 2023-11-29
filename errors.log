@@ -1,1 +1,2 @@
-error: errrorrrr
+error: stream is not readable {"type":"stream.not.readable"}
+error: req is not defined

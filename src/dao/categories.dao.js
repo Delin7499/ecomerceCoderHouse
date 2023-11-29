@@ -1,4 +1,5 @@
 import { categoriesModel } from "./mongo/categories.model.js";
+import { logger } from "../utils/logger.js";
 
 export default class Categorie {
   getCategories = async () => {

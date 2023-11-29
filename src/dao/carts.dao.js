@@ -1,5 +1,5 @@
-import { logger } from "../utils/logger.js";
 import { cartsModel } from "./mongo/carts.model.js";
+import { logger } from "../utils/logger.js";
 
 export default class Cart {
   getCarts = async () => {
