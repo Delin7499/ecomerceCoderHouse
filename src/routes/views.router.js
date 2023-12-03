@@ -75,6 +75,10 @@ viewsRouter.get("/password-recover", (req, res) => {
   res.render("passwordRecovery", {});
 });
 
+viewsRouter.get("/", (req, res) => {
+  res.redirect("/products");
+});
+
 viewsRouter.get(
   "/password-reset/:email/:token",
   recoveryIsValid,
