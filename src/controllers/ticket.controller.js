@@ -1,16 +1,15 @@
-import Ticket from "../dao/tickets.dao.js";
-import Cart from "../dao/carts.dao.js";
-import Product from "../dao/products.dao.js";
-
-const ticketDao = new Ticket();
-const cartDao = new Cart();
-const productDao = new Product();
+import {
+  UserService,
+  CartService,
+  ProductService,
+  TicketService,
+} from "../repositories/index.js";
 
 export const purchase = async (req, res) => {
   const cartId = req.params.cartId;
 
   try {
-    const cart = await cartDao.getCartById(cartId);
+    const cart = await CartService.getById(cartId);
 
     if (!cart) {
       return res.status(404).send("Cart doesn't exist");
@@ -21,10 +20,13 @@ export const purchase = async (req, res) => {
       return total + product.quantity * product.product.price;
     }, 0);
 
-    const newTicket = await ticketDao.createTicket({
+    const newTicket = await TicketService.create({
       amount: totalAmount,
       purchaser: req.session.email,
     });
+    console.log(newTicket._id);
+    UserService.addTicket(req.session.email, newTicket._id);
+
     req.context.socketServer.emit(`cartUpdate`, updatedCart);
     res.status(200).json({
       message: "Purchase complete",
@@ -44,8 +46,8 @@ const processPurchase = async (cart) => {
       const availableStock = product.stock;
 
       if (availableStock >= quantity) {
-        const newStock = availableStock - quantity;
-        await productDao.updateStock(product._id, newStock);
+        product.stock -= quantity;
+        await ProductService.update(product._id, product);
         return { ...cartProduct, purchased: true };
       } else {
         return { ...cartProduct, purchased: false };
@@ -57,7 +59,7 @@ const processPurchase = async (cart) => {
     (cartProduct) => !cartProduct.purchased
   );
 
-  const updatedCart = await cartDao.updateCart(cart._id, {
+  const updatedCart = await CartService.update(cart._id, {
     products: notPurchasedProducts,
   });
 
@@ -73,7 +75,7 @@ const processPurchase = async (cart) => {
 export const getUserTickets = async (req, res) => {
   const userEmail = req.params.email;
 
-  const tickets = await ticketDao.getUserTickets(userEmail);
+  const user = await UserService.getByEmail(userEmail);
 
-  return res.status(200).send(tickets);
+  return res.status(200).send(user.tickets);
 };

@@ -1,4 +1,7 @@
-const socket = io();
+const socket = io("http://localhost:8080", {
+  reconnectionAttempts: 10,
+  reconnectionDelay: 2000,
+});
 
 const productosContainer = document.getElementById("products");
 if (productosContainer) {
@@ -6,6 +9,7 @@ if (productosContainer) {
     const productoslist = productos.map(
       (prod) => `<div id="${prod._id}" class="product">
       <h2>${prod.title}</h2>
+      <p>Id: ${prod._id}</p>
       <p>Description: ${prod.description}</p>
       <p>Code: ${prod.code}</p>
       <p>Stock: ${prod.stock}</p>

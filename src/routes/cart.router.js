@@ -4,15 +4,15 @@ import {
   addProductToCart,
   createCart,
   deleteCart,
+  getAll,
   getCart,
-  getCarts,
   removeProductFromCart,
   updateProductQuantity,
-} from "../controller/carts.controller.js";
+} from "../controllers/cart.controller.js";
 
 const cartRouter = Router();
 
-cartRouter.get("/", getCarts);
+cartRouter.get("/", getAll);
 
 cartRouter.post("/", createCart);
 

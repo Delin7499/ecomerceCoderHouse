@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-const productosCollectio = "products";
-
 const productosSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -35,12 +33,15 @@ const productosSchema = new mongoose.Schema({
   },
   thumbnail: {
     type: String,
+    default: "https://via.placeholder.com/150",
+  },
+  owner: {
+    type: String,
+    required: true,
+    default: "admin",
   },
 });
 
 productosSchema.plugin(mongoosePaginate);
 
-export const productsModel = mongoose.model(
-  productosCollectio,
-  productosSchema
-);
+export const ProductModel = mongoose.model("products", productosSchema);

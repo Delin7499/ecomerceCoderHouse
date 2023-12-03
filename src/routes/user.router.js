@@ -4,7 +4,9 @@ import {
   githubcallback,
   login,
   logout,
-} from "../controller/users.controller.js";
+  resetPassword,
+  sendRecoveryEmail,
+} from "../controllers/user.controller.js";
 
 const userRouter = Router();
 
@@ -34,4 +36,8 @@ userRouter.get(
   passport.authenticate("github", { failureRedirect: "/login" }),
   githubcallback
 );
+
+userRouter.post("/recover", sendRecoveryEmail);
+
+userRouter.post("/reset-password/:email/:token", resetPassword);
 export default userRouter;

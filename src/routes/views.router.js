@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { adminAuthMiddleware } from "../middlewares/adminauth.js";
+import { recoveryIsValid } from "../middlewares/recoveryValid.js";
 
 const viewsRouter = Router();
 
@@ -64,8 +65,23 @@ viewsRouter.get("/mycart", (req, res) => {
 });
 
 viewsRouter.get("/mytickets", (req, res) => {
+  if (!req.session.isLogged) {
+    return res.redirect("/login");
+  }
   const userEmail = req.session.email;
   res.render("userTickets", { userEmail });
 });
+viewsRouter.get("/password-recover", (req, res) => {
+  res.render("passwordRecovery", {});
+});
 
+viewsRouter.get(
+  "/password-reset/:email/:token",
+  recoveryIsValid,
+  (req, res) => {
+    const email = req.params.email;
+    const token = req.params.token;
+    res.render("resetPassword", { email, token });
+  }
+);
 export default viewsRouter;

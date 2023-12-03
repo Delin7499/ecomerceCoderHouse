@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import shortid from "shortid";
-const { Schema } = mongoose;
 
-const ticketSchema = new Schema({
+const ticketSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
@@ -22,4 +21,4 @@ const ticketSchema = new Schema({
   },
 });
 
-export const ticketModel = mongoose.model("Tickets", ticketSchema);
+export const TicketModel = mongoose.model("tickets", ticketSchema);

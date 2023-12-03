@@ -1,15 +1,11 @@
 import passport from "passport";
 import local from "passport-local";
-import User from "../dao/users.dao.js";
 import bcrypt from "bcrypt";
 import GitHubStrategy from "passport-github2";
-import Cart from "../dao/carts.dao.js";
-import config from "../../config.js";
+import config from "./config.js";
 import { logger } from "../utils/logger.js";
+import { CartService, UserService } from "../repositories/index.js";
 const LocalStrategy = local.Strategy;
-
-const userDao = new User();
-const cartDao = new Cart();
 
 const initializePassport = () => {
   passport.use(
@@ -18,7 +14,7 @@ const initializePassport = () => {
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
-        const userExists = await userDao.getUserByEmail(email);
+        const userExists = await UserService.getByEmail(email);
 
         if (userExists) {
           logger.error("User already exists. Registration failed.");
@@ -29,8 +25,8 @@ const initializePassport = () => {
           password,
           bcrypt.genSaltSync(10)
         );
-        const carrito = await cartDao.createCart({ products: [] });
-        const user = await userDao.createUser({
+        const carrito = await CartService.create({ products: [] });
+        const user = await UserService.create({
           first_name,
           last_name,
           email,
@@ -55,16 +51,18 @@ const initializePassport = () => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           const email = profile.emails[0].value;
-          const user = await userDao.getUserByEmail(email);
+          const user = await UserService.getByEmail(email);
 
           if (!user) {
-            const carrito = await cartDao.createCart({ products: [] });
-            const newUser = await userDao.createUser({
+            const carrito = await CartService.create({ products: [] });
+
+            const newUser = await UserService.create({
               first_name: profile._json.login,
               last_name: "",
               email,
               age: 18,
               cart: carrito._id,
+              isGithub: true,
             });
             return done(null, newUser);
           }
@@ -98,7 +96,7 @@ const initializePassport = () => {
       done(null, adminUser);
     } else {
       try {
-        const user = await userDao.getUserById(id);
+        const user = await UserService.getById(id);
         done(null, user);
       } catch (err) {
         done(err);
@@ -129,7 +127,7 @@ const initializePassport = () => {
             return done(null, user);
           }
 
-          const user = await userDao.getUserByEmail(username);
+          const user = await UserService.getByEmail(username);
           if (!user) {
             logger.error("User not found. Login failed.");
             return done(null, false);

@@ -13,6 +13,7 @@ const productionLogger = winston.createLogger({
     new winston.transports.File({ filename: "errors.log", level: "error" }),
   ],
 });
-const enviroment = process.argv[2];
+
+const environment = process.env.NODE_ENV || "development";
 export const logger =
-  enviroment === "development" ? developmentLogger : productionLogger;
+  environment === "development" ? developmentLogger : productionLogger;

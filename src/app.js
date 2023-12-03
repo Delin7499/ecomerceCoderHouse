@@ -1,5 +1,5 @@
 import express from "express";
-import config from "../config.js";
+import config from "./config/config.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import initializePassport from "./config/passport.config.js";
@@ -14,28 +14,29 @@ import cartsRouter from "./routes/cart.router.js";
 import viewsRouter from "./routes/views.router.js";
 import userRouter from "./routes/user.router.js";
 import sessionRouter from "./routes/session.router.js";
-import Product from "./dao/products.dao.js";
-import Cart from "./dao/carts.dao.js";
-import Message from "./dao/messages.dao.js";
 import ticketRouter from "./routes/ticket.router.js";
-import { getProducts } from "./controller/mocking.controller.js";
+import { getProducts } from "./controllers/mocking.controller.js";
 import { addLogger } from "./middlewares/logger.js";
 import { connectToMongoDB } from "./utils/mongoconnect.js";
 import { logger } from "./utils/logger.js";
 import { cpus } from "os";
 import cluster from "cluster";
+import {
+  CartService,
+  CategoryService,
+  MessageService,
+  ProductService,
+} from "./repositories/index.js";
 
 const numberOfProcessors = cpus().length;
 
 if (cluster.isPrimary) {
+  logger.info(`The number of cpus is ${numberOfProcessors}`);
+  console.log(config);
   for (let i = 0; i < numberOfProcessors; i++) {
     cluster.fork();
   }
 } else {
-  const productDao = new Product();
-  const cartDao = new Cart();
-  const messageDao = new Message();
-
   const app = express();
   app.use(addLogger);
 
@@ -44,7 +45,7 @@ if (cluster.isPrimary) {
   app.use(
     session({
       store: MongoStore.create({
-        mongoUrl: config.mongoUrl,
+        mongoUrl: config.mongoURL,
         ttl: 100000,
       }),
       secret: "coderSectret",
@@ -62,11 +63,12 @@ if (cluster.isPrimary) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  const httpServer = app.listen(config.port, () => console.log("Running..."));
-
+  const httpServer = app.listen(config.port, () =>
+    logger.info(`Worker ${process.pid} listening on port ${config.port}`)
+  );
   const socketServer = new Server(httpServer);
 
-  app.use((req, res, next) => {
+  app.use((req, _, next) => {
     req.context = { socketServer };
     next();
   });
@@ -85,18 +87,19 @@ if (cluster.isPrimary) {
   app.use(`/`, viewsRouter);
 
   socketServer.on(`connection`, async (socket) => {
-    socket.emit(`products`, await productDao.getProducts());
-    socket.emit("categories", await productDao.getCategories());
-    socket.emit(`nuevo_mensaje`, await messageDao.getMessages());
+    logger.info(`Client connected to Worker ${process.pid}: ${socket.id}`);
+    socket.emit(`products`, await ProductService.getAll());
+    socket.emit("categories", await CategoryService.getAll());
+    socket.emit(`nuevo_mensaje`, await MessageService.getAll());
 
     socket.on("cartId", async (cartId) => {
-      const cart = await cartDao.getCartById(cartId);
+      const cart = await CartService.getById(cartId);
       socket.emit("cart", cart);
     });
 
     socket.on(`mensaje`, async (data) => {
-      messageDao.createMessage(data);
-      const messages = await messageDao.getMessages();
+      MessageService.create(data);
+      const messages = await MessageService.getAll();
       socketServer.emit("nuevo_mensaje", messages);
     });
   });

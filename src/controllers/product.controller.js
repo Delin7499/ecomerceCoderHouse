@@ -1,6 +1,4 @@
-import Product from "../dao/products.dao.js";
-
-const productDao = new Product();
+import { CategoryService, ProductService } from "../repositories/index.js";
 
 export const getProductsPaginated = async (req, res) => {
   const { limit, page, sort, query } = req.query;
@@ -21,7 +19,7 @@ export const getProductsPaginated = async (req, res) => {
     nextPage: "nextLink",
   };
 
-  const products = await productDao.getProductsPaginated(modelQuery, {
+  const products = await ProductService.getAllPaginated(modelQuery, {
     limit: modelLimit,
     page: modelPage,
     customLabels: myCustomLabels,
@@ -49,7 +47,7 @@ export const addProduct = async (req, res) => {
     req.body.category
   ) {
     const thumbnail = req.body.thumbnail ?? "";
-    await productDao.createPoduct({
+    await ProductService.create({
       title: req.body.title,
       description: req.body.description,
       code: req.body.code,
@@ -61,15 +59,15 @@ export const addProduct = async (req, res) => {
     });
 
     res.status(200).send();
-    req.context.socketServer.emit(`products`, await productDao.getProducts());
+    req.context.socketServer.emit(`products`, await ProductService.getAll());
   } else {
     res.status(400).send();
   }
 };
 
 export const deleteProduct = async (req, res) => {
-  await productDao.deleteProductById(req.params.pid);
-  req.context.socketServer.emit(`products`, await productDao.getProducts());
+  await ProductService.delete(req.params.pid);
+  req.context.socketServer.emit(`products`, await ProductService.getAll());
   res.status(200).send();
 };
 
@@ -77,11 +75,11 @@ export const updateProduct = async (req, res) => {
   const pid = parseInt(req.params.pid, 10);
   const updatedData = req.body;
 
-  await productDao.updateOne(pid, updatedData);
+  await ProductService.update(pid, updatedData);
   res.status(204).send();
 };
 
 export const addCategory = async (req, res) => {
-  await productDao.createCategory(req.params.categoryName);
+  await CategoryService.create({ name: req.params.categoryName });
   res.status(200).send();
 };

@@ -1,5 +1,3 @@
-const socket = io();
-
 const productosContainer = document.getElementById("products");
 const applyFiltersButton = document.getElementById("applyFilters");
 if (applyFiltersButton) {
@@ -78,10 +76,6 @@ const fetchProductsDefault = async () => {
 
 if (productosContainer) {
   fetchProducts("10", "1", "asc");
-
-  socket.on("products", () => {
-    fetchProducts("10", "1", "asc");
-  });
 
   const cartContainer = document.getElementById("cart");
   const cartId = cartContainer.getAttribute("data-id");

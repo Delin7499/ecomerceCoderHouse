@@ -1,16 +1,9 @@
-const socket = io();
-
 const cartContainer = document.getElementById("cart");
 const productsContainer = document.getElementById("products");
 const cartId = cartContainer.getAttribute("data-id");
 
 if (cartContainer) {
   const cartId = cartContainer.getAttribute("data-id");
-
-  socket.on("cartUpdate", (cartData) => {
-    renderCartProducts(cartData.products);
-    setupDeleteButtons();
-  });
 
   fetchCartData(cartId);
 }

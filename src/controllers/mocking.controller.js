@@ -1,9 +1,7 @@
 import { faker } from "@faker-js/faker";
+import { ProductService } from "../repositories/index.js";
 import shortid from "shortid";
 
-import Product from "../dao/products.dao.js";
-
-const productDao = new Product();
 let mockingProducts = undefined;
 
 export const getProducts = async (req, res) => {
@@ -13,7 +11,7 @@ export const getProducts = async (req, res) => {
     mockingProducts = [];
 
     for (let i = 0; i < 100; i++) {
-      productDao.createPoduct({
+      ProductService.create({
         title: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
         code: shortid.generate(),

@@ -1,17 +1,15 @@
-import Cart from "../dao/carts.dao.js";
 import { createErrorResponse } from "../utils.js";
+import { CartService } from "../repositories/index.js";
 
-const cartDao = new Cart();
-
-export const getCarts = async (req, res) => {
-  const carts = await cartDao.getCarts();
-  res.send(carts);
+export const getAll = async (_, res) => {
+  const carts = await CartService.getAll();
+  res.status(200).send(carts);
 };
 
 export const createCart = async (req, res) => {
   try {
-    const cart = await cartDao.createCart({ products: [] });
-    req.context.socketServer.emit(`carts`, await cartDao.getcarts());
+    const cart = await CartService.create({ products: [] });
+    req.context.socketServer.emit(`carts`, await CartService.getAll());
   } catch (error) {
     const errorCode = error.code || "CART_CREATE_ERROR";
     createErrorResponse(res, errorCode);
@@ -20,7 +18,7 @@ export const createCart = async (req, res) => {
 
 export const getCart = async (req, res) => {
   try {
-    const cart = await cartDao.getCartById(req.params.cid);
+    const cart = await CartService.getById(req.params.cid);
     if (cart) {
       res.status(200).send(cart.products);
     } else {
@@ -36,7 +34,7 @@ export const addProductToCart = async (req, res) => {
   try {
     const cartId = req.params.cid;
     const productId = req.params.pid;
-    const cart = await cartDao.getCartById(cartId);
+    const cart = await CartService.getById(cartId);
     const oldProduct = cart.products.find(
       ({ product }) => product._id == productId
     );
@@ -49,8 +47,8 @@ export const addProductToCart = async (req, res) => {
       });
     }
 
-    const update = await cartDao.updateOne(cartId, cart);
-    req.context.socketServer.emit(`carts`, await cartDao.getCarts());
+    const update = await CartService.update(cartId, cart);
+    req.context.socketServer.emit(`carts`, await CartService.getAll());
     res.send(update);
   } catch (error) {
     const errorCode = error.code || "CART_ADD_ERROR";
@@ -61,7 +59,7 @@ export const addProductToCart = async (req, res) => {
 export const removeProductFromCart = async (req, res) => {
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  const cart = await cartDao.getCartById(cartId);
+  const cart = await CartService.getById(cartId);
   if (!cart) {
     res.status(404).send();
     return;
@@ -72,7 +70,7 @@ export const removeProductFromCart = async (req, res) => {
   if (indexToDelete !== -1) {
     cart.products.splice(indexToDelete, 1);
   }
-  const update = await cartDao.updateOne(cartId, cart);
+  const update = await CartService.update(cartId, cart);
   req.context.socketServer.emit(`cartUpdate`, cart);
   res.send(update);
 };
@@ -80,14 +78,14 @@ export const removeProductFromCart = async (req, res) => {
 export const setCartProducts = async (req, res) => {
   const { products } = req.body;
   const cartId = req.params.cid;
-  const cart = await cartDao.getCartById(cartId);
+  const cart = await CartService.getById(cartId);
   if (!cart) {
     res.status(404).send();
     return;
   }
 
   cart.products = products;
-  const update = cartDao.updateOne(cartId, cart);
+  const update = Cart;
   res.send(update);
 };
 
@@ -95,7 +93,7 @@ export const updateProductQuantity = async (req, res) => {
   const { quantity } = req.body;
   const cartId = req.params.cid;
   const productId = req.params.pid;
-  const cart = await cartDao.getCartById(cartId);
+  const cart = await CartService.getById(cartId);
   const oldProduct = cart.products.find(({ product }) => product === productId);
 
   if (oldProduct) {
@@ -104,7 +102,7 @@ export const updateProductQuantity = async (req, res) => {
     res.status(404).send();
   }
 
-  const update = cartDao.updateOne(cartId, cart);
+  const update = CartService.update(cartId, cart);
 
   res.send(update);
 };
@@ -112,7 +110,7 @@ export const updateProductQuantity = async (req, res) => {
 export const deleteCart = async (req, res) => {
   const { products } = req.body;
   const cartId = req.params.cid;
-  const cart = await cartDao.getCartById(cartId);
+  const cart = await CartService.getById(cartId);
   if (!cart) {
     res.status(404).send();
     return;
@@ -120,6 +118,6 @@ export const deleteCart = async (req, res) => {
 
   cart.products = [];
 
-  const update = cartDao.updateOne(cartId, cart);
+  const update = CartService.update(cartId, cart);
   res.send(update);
 };
