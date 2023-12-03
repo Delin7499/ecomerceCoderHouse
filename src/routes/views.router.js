@@ -42,7 +42,8 @@ viewsRouter.get(`/products`, (req, res) => {
     return res.redirect("/login");
   }
   const session = req.session;
-  const isAdmin = req.session.role === "Admin";
+  const isAdmin =
+    req.session.role === "Admin" || req.session.role === "Premium";
   res.render("home", { session, isAdmin });
 });
 viewsRouter.get("/carts/:cid", (req, res) => {
@@ -50,9 +51,10 @@ viewsRouter.get("/carts/:cid", (req, res) => {
   res.render("cart", { cartId });
 });
 
-viewsRouter.get(`/realtimeproducts`, adminAuthMiddleware, (req, res) =>
-  res.render("realTimeProducts", {})
-);
+viewsRouter.get(`/realtimeproducts`, adminAuthMiddleware, (req, res) => {
+  const email = req.session.email;
+  return res.render("realTimeProducts", { email });
+});
 viewsRouter.get(`/realtimecarts`, (req, res) =>
   res.render(`realTimeCarts`, {})
 );

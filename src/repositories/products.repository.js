@@ -1,3 +1,5 @@
+import config from "../config/config.js";
+
 export default class ProductRepository {
   constructor(dao) {
     this.dao = dao;
@@ -29,5 +31,11 @@ export default class ProductRepository {
 
   delete = async (id) => {
     return this.dao.delete(id);
+  };
+
+  getAllOwnedByUser = async (email) => {
+    if (role === config.adminName) return this.dao.findAll();
+
+    return this.dao.find({ owner: email });
   };
 }

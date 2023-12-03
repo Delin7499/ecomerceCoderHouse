@@ -55,6 +55,7 @@ export const addProduct = async (req, res) => {
       status: req.body.status,
       stock: req.body.stock,
       category: req.body.category,
+      owner: req.session.email,
       thumbnail,
     });
 
@@ -66,6 +67,10 @@ export const addProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
+  const product = await ProductService.getById(req.params.pid);
+  if (product.owner !== req.session.email || req.session.role !== "Admin") {
+    return res.status(401).send("Unauthorized");
+  }
   await ProductService.delete(req.params.pid);
   req.context.socketServer.emit(`products`, await ProductService.getAll());
   res.status(200).send();

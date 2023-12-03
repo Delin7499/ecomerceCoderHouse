@@ -115,10 +115,10 @@ const initializePassport = () => {
             password == config.adminPassword
           ) {
             const user = {
-              _id: config.adminCoder,
-              first_name: "ADMIN",
+              _id: config.adminName,
+              first_name: config.adminName,
               last_name: "",
-              email: config.adminName,
+              email: "admin",
               age: 18,
               cart: "undefined",
               role: "Admin",

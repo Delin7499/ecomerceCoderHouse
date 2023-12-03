@@ -2,58 +2,35 @@ const socket = io("http://localhost:8080", {
   reconnectionAttempts: 10,
   reconnectionDelay: 2000,
 });
-
+const email = document.getElementById("email").value;
+console.log(email);
 const productosContainer = document.getElementById("products");
 if (productosContainer) {
-  socket.on("products", (productos) => {
-    const productoslist = productos.map(
-      (prod) => `<div id="${prod._id}" class="product">
-      <h2>${prod.title}</h2>
-      <p>Id: ${prod._id}</p>
-      <p>Description: ${prod.description}</p>
-      <p>Code: ${prod.code}</p>
-      <p>Stock: ${prod.stock}</p>
-      <p>Category: ${prod.category}</p>
-      <img src="${prod.thumbnail}" alt="${prod.title} Image" />
-      <p class="price">Price: $ ${prod.price}</p>
-    </div>`
-    );
-
-    productosContainer.innerHTML = productoslist.join("");
-  });
+  socket.on("products", (productos) => updateProducts(productos, email));
 }
-socket.on("products_update", (productos) => {
-  const productoslist = productos.map(
-    (prod) => `<div id="${prod._id}" class="product">
-      <h2>${prod.title}</h2>
-      <p>Description: ${prod.description}</p>
-      <p>Code: ${prod.code}</p>
-      <p>Stock: ${prod.stock}</p>
-      <p>Category: ${prod.category}</p>
-      <img src="${prod.thumbnail}" alt="${prod.title} Image" />
-      <p class="price">Price: $ ${prod.price}</p>
-    </div>`
-  );
-
-  productosContainer.innerHTML = productoslist.join("");
-});
+socket.on("products_update", (productos) => updateProducts(productos, email));
 
 const form = document.querySelector("#productForm");
+form.addEventListener("submit", submitForm);
 
-form.addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+const deleteForm = document.getElementById("deleteProductForm");
+deleteForm.addEventListener("submit", deleteProduct);
 
-  // Collect form data as shown in step 2
-  const formData = {
-    title: document.querySelector("#title").value,
-    description: document.querySelector("#description").value,
-    code: document.querySelector("#code").value,
-    price: parseFloat(document.querySelector("#price").value),
-    status: document.querySelector("#status").checked,
-    stock: parseInt(document.querySelector("#stock").value),
-    category: document.querySelector("#category").value,
-    thumbnail: document.querySelector("#thumbnail").value,
-  };
+const categoryForm = document.getElementById("addCategoryForm");
+categoryForm.addEventListener("submit", addCategory);
+
+const categorySelect = document.getElementById("category");
+socket.on("categories", populateCategories);
+
+function updateProducts(productos, email) {
+  const filteredProductos = productos.filter((prod) => prod.owner === email);
+  const productoslist = filteredProductos.map((prod) => getProductHTML(prod));
+  productosContainer.innerHTML = productoslist.join("");
+}
+
+function submitForm(event) {
+  event.preventDefault();
+  const formData = getFormData();
   fetch("/api/products", {
     method: "POST",
     headers: {
@@ -63,45 +40,58 @@ form.addEventListener("submit", function (event) {
   }).catch((error) => {
     console.error("Error:", error);
   });
-});
+}
 
-const deleteForm = document.getElementById("deleteProductForm");
-
-deleteForm.addEventListener("submit", function (e) {
+function deleteProduct(e) {
   e.preventDefault();
-
   const productId = document.getElementById("deleteId").value;
-
   fetch(`/api/products/${productId}`, {
     method: "DELETE",
   }).catch((error) => {
     console.error("Error:", error);
   });
-});
+}
 
-const categoryForm = document.getElementById("addCategoryForm");
-
-categoryForm.addEventListener("submit", function (e) {
+function addCategory(e) {
   e.preventDefault();
-
   const categoryName = document.getElementById("categoryName").value;
-
   fetch(`/api/products/category/${categoryName}`, {
     method: "POST",
   }).catch((error) => {
     console.error("Error:", error);
   });
-});
+}
 
-const categorySelect = document.getElementById("category");
-
-// Define an array of categories (you can fetch this data from an API or another source)
-
-socket.on("categories", (categories) => {
-  // Populate the <select> element with options
+function populateCategories(categories) {
   categories.forEach((category) => {
     const option = document.createElement("option");
-    option.textContent = category.name; // Set the text displayed in the option
-    categorySelect.appendChild(option); // Add the option to the <select>
+    option.textContent = category.name;
+    categorySelect.appendChild(option);
   });
-});
+}
+
+function getProductHTML(prod) {
+  return `<div id="${prod._id}" class="product">
+    <h2>${prod.title}</h2>
+    <p>Id: ${prod._id}</p>
+    <p>Description: ${prod.description}</p>
+    <p>Code: ${prod.code}</p>
+    <p>Stock: ${prod.stock}</p>
+    <p>Category: ${prod.category}</p>
+    <img src="${prod.thumbnail}" alt="${prod.title} Image" />
+    <p class="price">Price: $ ${prod.price}</p>
+  </div>`;
+}
+
+function getFormData() {
+  return {
+    title: document.querySelector("#title").value,
+    description: document.querySelector("#description").value,
+    code: document.querySelector("#code").value,
+    price: parseFloat(document.querySelector("#price").value),
+    status: document.querySelector("#status").checked,
+    stock: parseInt(document.querySelector("#stock").value),
+    category: document.querySelector("#category").value,
+    thumbnail: document.querySelector("#thumbnail").value,
+  };
+}
