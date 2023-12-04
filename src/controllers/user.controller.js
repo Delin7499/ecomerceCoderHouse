@@ -2,14 +2,9 @@ import { RecoveryTokenService, UserService } from "../repositories/index.js";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import Mail from "../helpers/mail.js";
+import { UserDTO } from "../DTO/user.dto.js";
 export const logout = async (req, res) => {
-  req.session.isLogged = false;
-  req.session.first_name = undefined;
-  req.session.last_name = undefined;
-  req.session.email = undefined;
-  req.session.age = undefined;
-  req.session.role = undefined;
-  req.session.userCart = undefined;
+  req.session.user = undefined;
   res.redirect("/login");
 };
 
@@ -18,24 +13,14 @@ export const login = async (req, res) => {
     res.status(400).send();
   }
 
-  req.session.first_name = req.user.first_name;
-  req.session.last_name = req.user.last_name;
-  req.session.email = req.user.email;
-  req.session.age = req.user.age;
   req.session.isLogged = true;
-  req.session.role = req.user.role;
-  req.session.userCart = req.user.cart._id;
+  req.session.user = req.user;
   res.redirect("/products");
 };
 
 export const githubcallback = async (req, res) => {
-  req.session.first_name = req.user.first_name;
-  req.session.last_name = req.user.last_name;
-  req.session.email = req.user.email;
-  req.session.age = req.user.age;
   req.session.isLogged = true;
-  req.session.role = req.user.role;
-  req.session.userCart = req.user.cart._id;
+  req.session.user = req.user;
 
   res.redirect("/products");
 };
@@ -99,4 +84,13 @@ export const resetPassword = async (req, res) => {
   await RecoveryTokenService.deleteById(recoveryToken._id);
 
   return res.status(200).send("Password updated");
+};
+
+export const getSessionUser = async (req, res) => {
+  if (!req.session.user) {
+    console.log("no user");
+    return res.json(null);
+  }
+  console.log(req.session.user);
+  return res.json(req.session.user);
 };

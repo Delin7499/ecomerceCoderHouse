@@ -1,7 +1,7 @@
 <header>
-  {{#if session.isLogged}}
+  {{#if isLogged}}
     <div>
-      <h1>Bienvenido {{session.first_name}} Rol: {{session.role}}</h1>
+      <h1>Bienvenido {{user.first_name}} Rol: {{user.role}}</h1>
     </div>
     <nav id="logout">
 

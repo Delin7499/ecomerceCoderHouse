@@ -5,14 +5,14 @@ import { recoveryIsValid } from "../middlewares/recoveryValid.js";
 const viewsRouter = Router();
 
 viewsRouter.get(`/login`, (req, res) => {
-  if (req.session.isLogged) {
+  if (req.session.user) {
     res.redirect("/products");
   } else {
     res.render("login", {});
   }
 });
 viewsRouter.get(`/signup`, (req, res) => {
-  if (req.session.isLogged) {
+  if (req.session.user) {
     res.redirect("/products");
     res.redirect("/products");
   } else {
@@ -20,10 +20,10 @@ viewsRouter.get(`/signup`, (req, res) => {
   }
 });
 viewsRouter.get(`/profile`, (req, res) => {
-  if (!req.session.isLogged) {
+  if (!req.session.user) {
     return res.redirect("/login");
   }
-  const { first_name, last_name, email, age, password } = req.session;
+  const { first_name, last_name, email, age, password } = req.session.user;
   res.render("profile", { first_name, last_name, email, age, password });
 });
 
@@ -38,13 +38,14 @@ viewsRouter.post("/setCookies", (req, res) => {
 });
 
 viewsRouter.get(`/products`, (req, res) => {
-  if (!req.session.isLogged) {
+  if (!req.session.user) {
     return res.redirect("/login");
   }
-  const session = req.session;
+  const isLogged = req.session.isLogged;
+  const user = req.session.user;
   const isAdmin =
-    req.session.role === "Admin" || req.session.role === "Premium";
-  res.render("home", { session, isAdmin });
+    req.session.user.role === "Admin" || req.session.user.role === "Premium";
+  res.render("home", { isLogged, user, isAdmin });
 });
 viewsRouter.get("/carts/:cid", (req, res) => {
   const cartId = req.params.cid;
@@ -52,7 +53,7 @@ viewsRouter.get("/carts/:cid", (req, res) => {
 });
 
 viewsRouter.get(`/realtimeproducts`, adminAuthMiddleware, (req, res) => {
-  const email = req.session.email;
+  const email = req.session.user.email;
   return res.render("realTimeProducts", { email });
 });
 viewsRouter.get(`/realtimecarts`, (req, res) =>
@@ -62,15 +63,15 @@ viewsRouter.get(`/realtimecarts`, (req, res) =>
 viewsRouter.get("/chat", (req, res) => res.render("chat", {}));
 
 viewsRouter.get("/mycart", (req, res) => {
-  const cartId = req.session.userCart;
+  const cartId = req.session.user.cart._id;
   res.render("cart", { cartId });
 });
 
 viewsRouter.get("/mytickets", (req, res) => {
-  if (!req.session.isLogged) {
+  if (!req.session.user) {
     return res.redirect("/login");
   }
-  const userEmail = req.session.email;
+  const userEmail = req.session.user.email;
   res.render("userTickets", { userEmail });
 });
 viewsRouter.get("/password-recover", (req, res) => {

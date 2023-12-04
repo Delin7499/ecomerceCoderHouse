@@ -1,6 +1,7 @@
 import { Router } from "express";
 import passport from "passport";
 import {
+  getSessionUser,
   githubcallback,
   login,
   logout,
@@ -40,4 +41,6 @@ userRouter.get(
 userRouter.post("/recover", sendRecoveryEmail);
 
 userRouter.post("/reset-password/:email/:token", resetPassword);
+
+userRouter.get("/session-user", getSessionUser);
 export default userRouter;

@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import { errorHandler } from "./middlewares/errorhandler.js";
+import cors from "cors";
 
 import productRouter from "./routes/product.router.js";
 import cartsRouter from "./routes/cart.router.js";
@@ -39,7 +40,16 @@ const numberOfProcessors = cpus().length;
   }
 } else { */
 const app = express();
+
 app.use(addLogger);
+
+const corsOptions = {
+  origin: "http://localhost:3000", // or an array of allowed origins
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // enable passing cookies, authentication headers, etc.
+};
+
+app.use(cors(corsOptions));
 //app.use(brotliMiddleware);
 
 connectToMongoDB();
