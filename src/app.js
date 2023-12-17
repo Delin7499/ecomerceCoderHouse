@@ -10,6 +10,9 @@ import handlebars from "express-handlebars";
 import { errorHandler } from "./middlewares/errorhandler.js";
 import cors from "cors";
 
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+
 import productRouter from "./routes/product.router.js";
 import cartsRouter from "./routes/cart.router.js";
 import viewsRouter from "./routes/views.router.js";
@@ -21,6 +24,20 @@ import { addLogger } from "./middlewares/logger.js";
 import { connectToMongoDB } from "./utils/mongoconnect.js";
 import { logger } from "./utils/logger.js";
 import { cpus } from "os";
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentacion Coderhouse",
+      description: "API de ecommerce",
+    },
+  },
+  apis: ["./src/docs/**/*.yml"],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+
 //import cluster from "cluster";
 import {
   CartService,
@@ -41,6 +58,7 @@ const numberOfProcessors = cpus().length;
 } else { */
 const app = express();
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(addLogger);
 
 const corsOptions = {
