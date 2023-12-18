@@ -1,0 +1,78 @@
+paths:
+  /api/products:
+    get:
+      tags:
+        - products
+      summary: Get all products
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    post:
+      tags:
+        - products
+      summary: Create a new product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+  /api/products/{id}:
+    delete:
+      tags:
+        - products
+      summary: Delete a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    put:
+      tags:
+        - products
+      summary: Update a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+
+  /category/:categoryName:
+    post:
+      tags:
+        - products
+      summary: add a category
+      parameters:
+        - name: categoryName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error

@@ -1,0 +1,25 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: number
+        categoty:
+          type: string
+        thumbnail:
+          type: string
+        owner:
+          type: string

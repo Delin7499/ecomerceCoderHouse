@@ -27,13 +27,13 @@ import { cpus } from "os";
 
 const swaggerOptions = {
   definition: {
-    openapi: "3.0.1",
+    openapi: "3.0.0",
     info: {
       title: "Documentacion Coderhouse",
       description: "API de ecommerce",
     },
   },
-  apis: ["./src/docs/**/*.yml"],
+  apis: ["./src/docs/**/*.yaml"],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
