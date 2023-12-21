@@ -1,0 +1,150 @@
+paths:
+  /api/carts:
+    get:
+      tags:
+        - carts
+      summary: Get all carts, product details are populated
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    post:
+      tags:
+        - carts
+      summary: Create a new cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCart"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+  /api/carts/{id}:
+    get:
+      tags:
+        - carts
+      summary: Get a cart by id, product details are populated
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    put:
+      tags:
+        - carts
+      summary: Update a cart by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCart"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - carts
+      summary: Delete a cart by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+  /:cid/product/{id}:
+    post:
+      tags:
+        - carts
+      summary: Add a product to a cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProduct"
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    put:
+      tags:
+        - carts
+      summary: Update quantity of a product in a cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - carts
+      summary: Delete a product from a cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: Internal Server Error

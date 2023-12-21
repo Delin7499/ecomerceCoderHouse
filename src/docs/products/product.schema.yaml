@@ -17,7 +17,28 @@ components:
           type: boolean
         stock:
           type: number
-        categoty:
+        category:
+          type: string
+        thumbnail:
+          type: string
+        owner:
+          type: string
+    NewProduct:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        price:
+          type: number
+        status:
+          type: boolean
+        stock:
+          type: number
+        category:
           type: string
         thumbnail:
           type: string
