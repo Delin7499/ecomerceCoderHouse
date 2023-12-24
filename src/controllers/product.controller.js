@@ -1,4 +1,5 @@
 import { CategoryService, ProductService } from "../repositories/index.js";
+import { createErrorResponse } from "../utils.js";
 
 export const getProductsPaginated = async (req, res) => {
   const { limit, page, sort, query } = req.query;
@@ -36,6 +37,15 @@ export const getProductsPaginated = async (req, res) => {
   res.send(products);
 };
 
+export const getProductById = async (req, res) => {
+  const product = await ProductService.getById(req.params.pid);
+  if (product) {
+    res.status(200).send(product);
+  } else {
+    res.status(404).send();
+  }
+};
+
 export const addProduct = async (req, res) => {
   if (
     req.body.title &&
@@ -47,7 +57,7 @@ export const addProduct = async (req, res) => {
     req.body.category
   ) {
     const thumbnail = req.body.thumbnail ?? "";
-    await ProductService.create({
+    const newProduct = await ProductService.create({
       title: req.body.title,
       description: req.body.description,
       code: req.body.code,
@@ -59,7 +69,7 @@ export const addProduct = async (req, res) => {
       thumbnail,
     });
 
-    res.status(200).send();
+    res.status(200).send(newProduct);
     req.context.socketServer.emit(`products`, await ProductService.getAll());
   } else {
     res.status(400).send();
