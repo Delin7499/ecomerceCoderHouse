@@ -59,8 +59,9 @@ export default class Product {
 
   async delete(productId) {
     try {
-      await ProductModel.findByIdAndDelete(productId);
+      await ProductModel.findByIdAndDelete(productId).exec();
     } catch (error) {
+      console.log(error);
       throw new Error("Failed to delete product");
     }
   }

@@ -87,14 +87,16 @@ export const deleteProduct = async (req, res) => {
 };
 
 export const updateProduct = async (req, res) => {
-  const pid = parseInt(req.params.pid, 10);
+  const pid = req.params.pid;
   const updatedData = req.body;
 
-  await ProductService.update(pid, updatedData);
-  res.status(204).send();
+  const update = await ProductService.update(pid, updatedData);
+  res.status(200).send(update);
 };
 
 export const addCategory = async (req, res) => {
-  await CategoryService.create({ name: req.params.categoryName });
-  res.status(200).send();
+  const newCategory = await CategoryService.create({
+    name: req.params.categoryName,
+  });
+  res.status(200).send(newCategory);
 };

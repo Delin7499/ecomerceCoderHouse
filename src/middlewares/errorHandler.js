@@ -3,7 +3,6 @@ import { logger } from "../utils/logger.js";
 
 export const errorHandler = (error, req, res, next) => {
   logger.error(error);
-  console.log(error);
 
   const errorCode = error.code || "UNKNOWN_ERROR";
 
